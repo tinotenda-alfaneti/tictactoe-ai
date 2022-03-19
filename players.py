@@ -6,46 +6,59 @@ from checker import Check
 class Player(Check):
     def __init__(self):
         super().__init__()
-        self.player = ""
+        self.player = "O"
+        self.bot = "X"
+
+    def spaceIsFree(self, position):
+        if self.positions[position] == ' ':
+            return True
+        else:
+            return False
+
+    def insertLetter(self, letter, position):
+        if self.spaceIsFree(position):
+            self.positions[position] = letter
+            print(self.game_board())
+
+            if (self.draw_checker()):
+                print("Draw!")
+
+            self.winner_checker()
+            if self.winner:
+                if letter == 'X':
+                    print("Bot wins!")
+                else:
+                    print("Player wins!")
+                    
+            return
+
+
+        else:
+            print("Can't insert there!")
+            position = int(input("Please enter new position:  "))
+            self.insertLetter(letter, position)
+            return
 
     # player 1
 
-    def player_1(self):
-        self.player = input("What is your position? (RowColumn): ")
-        # try statement to catch the error of invalid position entered i.e word or numbers out of the list range
-        try:
-            # if statement for checking if the position is not taken and replacing the position when
-            # it has not been played
-            if self.positions[int(self.player[0])][int(self.player[1])] == "X" \
-                    or self.positions[int(self.player[0])][int(self.player[1])] == "O":
-                print("Position already chosen\nPlay again")
-                self.player_1()
-            else:
-                self.positions[int(self.player[0])][int(self.player[1])] = "X"
-                print(self.game_board())
-                self.count += 1
-            self.winner_checker()
-            self.draw_checker()
-        except:
-            print("Position entered invalid.\nYou just lost your turn to play\n")
+    def playerMove(self):
+        position = int(input("Enter the position for 'O':  "))
+        self.insertLetter(self.player, position)
+        return
+    
+    # computer play
 
-    # player 2
+    def compMove(self):
+        bestScore = -100
+        bestMove = 0
+        for key in self.positions.keys():
+            if (self.positions[key] == ' '):
+                self.positions[key] = self.bot
+                score = self.minimax(self.positions, 0, False)
+                self.positions[key] = ' '
+                if (score > bestScore):
+                    bestScore = score
+                    bestMove = key
 
-    def player_2(self):
-        self.player = input("What is your position? (RowColumn): ")
-        # try statement to catch the error of invalid position entered i.e word or numbers out of the list range
-        try:
-            # if statement for checking if the position is not taken and replacing the position when
-            # it has not been played
-            if self.positions[int(self.player[0])][int(self.player[1])] == "X" \
-                    or self.positions[int(self.player[0])][int(self.player[1])] == "O":
-                print("Position already chosen\nPlay again")
-                self.player_2()
-            else:
-                self.positions[int(self.player[0])][int(self.player[1])] = "O"
-                print(self.game_board())
-                self.count += 1
-            self.winner_checker()
-            self.draw_checker()
-        except:
-            print("Position entered invalid.\nYou just lost your turn to play\n")
+        self.insertLetter(self.bot, bestMove)
+        return

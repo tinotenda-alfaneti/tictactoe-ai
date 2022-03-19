@@ -7,7 +7,6 @@ class Check(Display):
 
     def __init__(self):
         super().__init__()
-        self.count = 0
         self.winner = False
         self.draw = False
 
@@ -15,47 +14,80 @@ class Check(Display):
 
     def winner_checker(self):
 
-        # checking player 1 horizontal positions
-        if "  ".join(self.positions[0]) == "X  X  X" or "  ".join(self.positions[1]) == "X  X  X" \
-                or "  ".join(self.positions[2]) == "X  X  X":
-            print("\nPlayer 1 won")
+        if (self.positions[1] == self.positions[2] and self.positions[1] == self.positions[3] and self.positions[1] != ' '):
             self.winner = True
-
-        # checking player 2 horizontal positions
-        if "  ".join(self.positions[0]) == "O  O  O" or "  ".join(self.positions[1]) == "O  O  O" \
-                or "  ".join(self.positions[2]) == "O  O  O":
-            print("\nPlayer 2 won")
+        elif (self.positions[4] == self.positions[5] and self.positions[4] == self.positions[6] and self.positions[4] != ' '):
             self.winner = True
-
-        # checking player 1 horizontal positions
-        if (self.positions[0][0] == "X" and self.positions[1][0] == "X" and self.positions[2][0] == "X") \
-                or (self.positions[0][1] == "X" and self.positions[1][1] == "X" and self.positions[2][1] == "X") \
-                or (self.positions[0][2] == "X" and self.positions[1][2] == "X" and self.positions[2][2] == "X"):
-            print("\nPlayer 1 won")
+        elif (self.positions[7] == self.positions[8] and self.positions[7] == self.positions[9] and self.positions[7] != ' '):
             self.winner = True
-
-        # checking player 2 horizontal positions
-        if (self.positions[0][0] == "O" and self.positions[1][0] == "O" and self.positions[2][0] == "O") \
-                or (self.positions[0][1] == "O" and self.positions[1][1] == "O" and self.positions[2][1] == "O") \
-                or (self.positions[0][2] == "O" and self.positions[1][2] == "O" and self.positions[2][2] == "O"):
-            print("\nPlayer 2 won")
+        elif (self.positions[1] == self.positions[4] and self.positions[1] == self.positions[7] and self.positions[1] != ' '):
             self.winner = True
-
-        # checking player 1 diagonal positions
-        if (self.positions[0][0] == "X" and self.positions[1][1] == "X" and self.positions[2][2] == "X") \
-                or (self.positions[0][2] == "X" and self.positions[1][1] == "X" and self.positions[2][0] == "X"):
-            print("\nPlayer 1 won")
+        elif (self.positions[2] == self.positions[5] and self.positions[2] == self.positions[8] and self.positions[2] != ' '):
             self.winner = True
-
-        # checking player 2 diagonal positions
-        if (self.positions[0][0] == "O" and self.positions[1][1] == "O" and self.positions[2][2] == "O") \
-                or (self.positions[0][2] == "O" and self.positions[1][1] == "O" and self.positions[2][0] == "O"):
-            print("\nPlayer 2 won")
+        elif (self.positions[3] == self.positions[6] and self.positions[3] == self.positions[9] and self.positions[3] != ' '):
             self.winner = True
+        elif (self.positions[1] == self.positions[5] and self.positions[1] == self.positions[9] and self.positions[1] != ' '):
+            self.winner = True
+        elif (self.positions[7] == self.positions[5] and self.positions[7] == self.positions[3] and self.positions[7] != ' '):
+            self.winner = True
+        else:
+            self.winner = False
+    
 
-    # checking if all the positions are occupied
+    def checkWhichMarkWon(self, mark):
+        if self.positions[1] == self.positions[2] and self.positions[1] == self.positions[3] and self.positions[1] == mark:
+            return True
+        elif (self.positions[4] == self.positions[5] and self.positions[4] == self.positions[6] and self.positions[4] == mark):
+            return True
+        elif (self.positions[7] == self.positions[8] and self.positions[7] == self.positions[9] and self.positions[7] == mark):
+            return True
+        elif (self.positions[1] == self.positions[4] and self.positions[1] == self.positions[7] and self.positions[1] == mark):
+            return True
+        elif (self.positions[2] == self.positions[5] and self.positions[2] == self.positions[8] and self.positions[2] == mark):
+            return True
+        elif (self.positions[3] == self.positions[6] and self.positions[3] == self.positions[9] and self.positions[3] == mark):
+            return True
+        elif (self.positions[1] == self.positions[5] and self.positions[1] == self.positions[9] and self.positions[1] == mark):
+            return True
+        elif (self.positions[7] == self.positions[5] and self.positions[7] == self.positions[3] and self.positions[7] == mark):
+            return True
+        else:
+            return False
+
 
     def draw_checker(self):
-        if self.count == 9 and not self.winner:
-            print("This is a DRAW")
-            self.draw = True
+        for key in self.positions.keys():
+            if (self.positions[key] == ' '):
+                return False
+        return True
+        
+
+    def minimax(self, board, depth, isMaximizing):
+        if (self.checkWhichMarkWon(self.bot)):
+            return 1
+        elif (self.checkWhichMarkWon(self.player)):
+            return -1
+        elif (self.draw_checker()):
+            return 0
+
+        if (isMaximizing):
+            bestScore = -100
+            for key in board.keys():
+                if (board[key] == ' '):
+                    board[key] = self.bot
+                    score = self.minimax(board, depth + 1, False)
+                    board[key] = ' '
+                    if (score > bestScore):
+                        bestScore = score
+            return bestScore
+
+        else:
+            bestScore = 100
+            for key in board.keys():
+                if (board[key] == ' '):
+                    board[key] = self.player
+                    score = self.minimax(board, depth + 1, True)
+                    board[key] = ' '
+                    if (score < bestScore):
+                        bestScore = score
+            return bestScore

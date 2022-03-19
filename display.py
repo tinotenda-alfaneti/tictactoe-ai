@@ -15,11 +15,10 @@ end_message = "Thank you for playing My TicTacToe"
 
 class Display:
     def __init__(self):
-        self.positions = [["*", "*", "*"], ["*", "*", "*"], ["*", "*", "*"]]  # Nested list for positions
+        self.positions = {1: " ", 2: " ", 3: " ", 4: " ", 5: " ", 6: " ", 7: " ", 8: " ", 9: " "} 
         self.board = ""
 
-    # function for displaying the positions as a box to mimic the tic tac toe game
     def game_board(self):
-        self.board = ("  0  1  2" + "\n" + "0 " + "  ".join(self.positions[0]) + "\n" + "1 " +
-                      "  ".join(self.positions[1]) + "\n" + "2 " + "  ".join(self.positions[2]))
+        self.board = f"{self.positions[1]}|{self.positions[2]}|{self.positions[3]}\n-+-+-\n{self.positions[4]}|{self.positions[5]}|{self.positions[6]}\n-+-+-\n{self.positions[7]}|{self.positions[8]}|{self.positions[9]}\n"
+
         return self.board
