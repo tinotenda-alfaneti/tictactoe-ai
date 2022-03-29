@@ -7,34 +7,10 @@ class Check(Display):
 
     def __init__(self):
         super().__init__()
-        self.winner = False
-        self.draw = False
 
     # function for checking for the winner
 
-    def winner_checker(self):
-
-        if (self.positions[1] == self.positions[2] and self.positions[1] == self.positions[3] and self.positions[1] != ' '):
-            self.winner = True
-        elif (self.positions[4] == self.positions[5] and self.positions[4] == self.positions[6] and self.positions[4] != ' '):
-            self.winner = True
-        elif (self.positions[7] == self.positions[8] and self.positions[7] == self.positions[9] and self.positions[7] != ' '):
-            self.winner = True
-        elif (self.positions[1] == self.positions[4] and self.positions[1] == self.positions[7] and self.positions[1] != ' '):
-            self.winner = True
-        elif (self.positions[2] == self.positions[5] and self.positions[2] == self.positions[8] and self.positions[2] != ' '):
-            self.winner = True
-        elif (self.positions[3] == self.positions[6] and self.positions[3] == self.positions[9] and self.positions[3] != ' '):
-            self.winner = True
-        elif (self.positions[1] == self.positions[5] and self.positions[1] == self.positions[9] and self.positions[1] != ' '):
-            self.winner = True
-        elif (self.positions[7] == self.positions[5] and self.positions[7] == self.positions[3] and self.positions[7] != ' '):
-            self.winner = True
-        else:
-            self.winner = False
-    
-
-    def checkWhichMarkWon(self, mark):
+    def is_winner(self, mark):
         if self.positions[1] == self.positions[2] and self.positions[1] == self.positions[3] and self.positions[1] == mark:
             return True
         elif (self.positions[4] == self.positions[5] and self.positions[4] == self.positions[6] and self.positions[4] == mark):
@@ -55,39 +31,40 @@ class Check(Display):
             return False
 
 
-    def draw_checker(self):
+    def is_draw(self):
         for key in self.positions.keys():
             if (self.positions[key] == ' '):
                 return False
         return True
         
 
-    def minimax(self, board, depth, isMaximizing):
-        if (self.checkWhichMarkWon(self.bot)):
+    # computer move
+    def check_best_move(self, board, depth, is_maximizing):
+        if (self.is_winner(self.computer_symbol)):
             return 1
-        elif (self.checkWhichMarkWon(self.player)):
+        elif (self.is_winner(self.player_symbol)):
             return -1
-        elif (self.draw_checker()):
+        elif (self.is_draw()):
             return 0
 
-        if (isMaximizing):
-            bestScore = -100
+        if (is_maximizing):
+            best_score = -100
             for key in board.keys():
                 if (board[key] == ' '):
-                    board[key] = self.bot
-                    score = self.minimax(board, depth + 1, False)
+                    board[key] = self.computer_symbol
+                    score = self.check_best_move(board, depth + 1, False)
                     board[key] = ' '
-                    if (score > bestScore):
-                        bestScore = score
-            return bestScore
+                    if (score > best_score):
+                        best_score = score
+            return best_score
 
         else:
-            bestScore = 100
+            best_score = 100
             for key in board.keys():
                 if (board[key] == ' '):
-                    board[key] = self.player
-                    score = self.minimax(board, depth + 1, True)
+                    board[key] = self.player_symbol
+                    score = self.check_best_move(board, depth + 1, True)
                     board[key] = ' '
-                    if (score < bestScore):
-                        bestScore = score
-            return bestScore
+                    if (score < best_score):
+                        best_score = score
+            return best_score

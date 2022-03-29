@@ -10,7 +10,7 @@ Y88b. 888Y88b.   Y88b. 888  888Y88b.   Y88b. Y88..88PY8b.
 """
 welcome = "\nWelcome to my TicTacToe Game\n"
 
-end_message = "Thank you for playing My TicTacToe"
+end_message = "Thank you for playing My TicTacToe\n"
 
 
 class Display:
@@ -22,3 +22,7 @@ class Display:
         self.board = f"{self.positions[1]}|{self.positions[2]}|{self.positions[3]}\n-+-+-\n{self.positions[4]}|{self.positions[5]}|{self.positions[6]}\n-+-+-\n{self.positions[7]}|{self.positions[8]}|{self.positions[9]}\n"
 
         return self.board
+
+    def positions_guide(self):
+        return f"1|2|3\n-+-+-\n4|5|6\n-+-+-\n7|8|9\n"
+         
