@@ -6,10 +6,11 @@ from checker import Check
 class Player(Check):
     def __init__(self):
         super().__init__()
-        self.player_symbol = "O"
-        self.computer_symbol = "X"
+        self.player1_symbol = "O"
+        self.player2_symbol = "X"
         self.winner = False
         self.draw = False
+        self.computer = False
 
     def is_space_free(self, position):
         if self.positions[position] == ' ':
@@ -28,10 +29,16 @@ class Player(Check):
 
             if self.is_winner(letter):
                 self.winner = True
-                if letter == 'X':
-                    print("Computer won!")
+                if self.computer:
+                    if letter == 'X':
+                        print("Computer won!")
+                    else:
+                        print("You won!")
                 else:
-                    print("You won!")
+                    if letter == "X":
+                        print("Player 2 won")
+                    else:
+                        print("Player 1 won")
                     
             return
 
@@ -42,22 +49,29 @@ class Player(Check):
             self.insert_letter(letter, position)
             return
 
-    def human_player_move(self):
+    def human_player_one(self):
         position = int(input("Enter the position for 'O':  "))
-        self.insert_letter(self.player_symbol, position)
+        self.insert_letter(self.player1_symbol, position)
         return
 
+    def human_player_two(self):
+        position = int(input("Enter the position for 'X':  "))
+        self.insert_letter(self.player2_symbol, position)
+        return
+
+    # computer move
     def computer_move(self):
+        self.computer = True
         best_score = -100
         best_move = 0
         for key in self.positions.keys():
             if (self.positions[key] == ' '):
-                self.positions[key] = self.computer_symbol
+                self.positions[key] = self.player2_symbol
                 score = self.check_best_move(self.positions, 0, False)
                 self.positions[key] = ' '
                 if (score > best_score):
                     best_score = score
                     best_move = key
 
-        self.insert_letter(self.computer_symbol, best_move)
+        self.insert_letter(self.player2_symbol, best_move)
         return
