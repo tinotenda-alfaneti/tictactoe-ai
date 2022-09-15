@@ -39,23 +39,29 @@ class Check(Display):
         
 
     # computer move
-    def check_best_move(self, board, depth, is_maximizing):
+    def check_best_move(self, board, depth, alpha, beta, is_maximizing):
         if (self.is_winner(self.player2_symbol)):
             return 1
         elif (self.is_winner(self.player1_symbol)):
             return -1
         elif (self.is_draw()):
             return 0
+        alpha = -100
+        beta = 100
 
         if (is_maximizing):
             best_score = -100
+
             for key in board.keys():
                 if (board[key] == ' '):
                     board[key] = self.player2_symbol
-                    score = self.check_best_move(board, depth + 1, False)
+                    score = self.check_best_move(board, depth + 1, alpha, beta, False)
                     board[key] = ' '
-                    if (score > best_score):
-                        best_score = score
+                    best_score = max(score, best_score)
+                    alpha = max(score, alpha)
+                    if beta <= alpha:
+                        break
+                    
             return best_score
 
         else:
@@ -63,8 +69,11 @@ class Check(Display):
             for key in board.keys():
                 if (board[key] == ' '):
                     board[key] = self.player1_symbol
-                    score = self.check_best_move(board, depth + 1, True)
+                    score = self.check_best_move(board, depth + 1, alpha, beta, True)
                     board[key] = ' '
-                    if (score < best_score):
-                        best_score = score
+                    best_score = min(score, best_score)
+                    beta = min(score, beta)
+                    if beta <= alpha:
+                        break
+                    
             return best_score

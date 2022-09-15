@@ -67,7 +67,7 @@ class Player(Check):
         for key in self.positions.keys():
             if (self.positions[key] == ' '):
                 self.positions[key] = self.player2_symbol
-                score = self.check_best_move(self.positions, 0, False)
+                score = self.check_best_move(self.positions, 0, -100, 100, False)
                 self.positions[key] = ' '
                 if (score > best_score):
                     best_score = score
