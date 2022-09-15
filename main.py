@@ -32,6 +32,9 @@ while True:
     play_game()
     choice = input("Do you want to play again (Yes/NO): ").lower()
     if choice == "yes":
+        display = Display()
+        brain = Check()
+        player = Player()
         play_game()
     else:
         break
